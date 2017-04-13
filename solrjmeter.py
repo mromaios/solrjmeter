@@ -36,7 +36,7 @@ import traceback
 from contextlib import contextmanager
 from pprint import pprint,pformat
 
-INSTDIR = 'SOLRJMETER_HOME' in os.environ and os.environ['SOLRJMETER_HOME'] or '/var/lib/montysolr'
+INSTDIR = 'SOLRJMETER_HOME' in os.environ and os.environ['SOLRJMETER_HOME'] or os.getcwd()+'/..'
 
 COMMASPACE = ', '
 SPACE = ' '
@@ -389,8 +389,8 @@ def setup_jmeter(options):
     with open("install_jmeter.sh", "w") as build_ant:
         build_ant.write("""#!/bin/bash -e
         
-        if [ -f apache-jmeter-2.9.tgz ]; then
-          rm apache-jmeter-2.9.tgz
+        if [ -f apache-jmeter-3.0.tgz ]; then
+          rm apache-jmeter-3.0.tgz
         fi
         
         if [ -d jmeter ]; then
@@ -399,7 +399,7 @@ def setup_jmeter(options):
         
         wget -nc http://mirror.23media.de/apache//jmeter/binaries/apache-jmeter-3.0.tgz
         tar -xzf apache-jmeter-3.0.tgz
-        mv apache-jmeter-2.0 jmeter
+        mv apache-jmeter-3.0 jmeter
         
         wget -nc http://jmeter-plugins.org/downloads/file/JMeterPlugins-Standard-1.4.0.zip
         wget -nc http://jmeter-plugins.org/downloads/file/JMeterPlugins-Extras-1.4.0.zip
