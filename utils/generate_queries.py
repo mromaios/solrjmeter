@@ -1,10 +1,10 @@
-
 import sys
 import traceback
 import os
-import csv
+import unicodecsv as csv
 import tempfile
 import time
+import io
 
 from solrjmeter import req, error, run_cmd, Measurement
 
@@ -245,7 +245,7 @@ def retrieve_pseudo_collocations(options, max_time=600,
         
         # first write terms to disk
         fi, tmpfile = tempfile.mkstemp()
-        fd = open(tmpfile, 'w')
+        fd = io.open(tmpfile, 'w')
         fd.write("\n".join(terms[fn]))
         fd.close()
         
@@ -333,7 +333,7 @@ def escape_simple(term):
     return term.replace('"', '\\"')
     
 def eq(freq):
-    return '==%s' % freq
+    return '=%s' % freq
 def gte(freq):
     return '>=%s' % freq
 def lte(freq):

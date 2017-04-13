@@ -24,7 +24,7 @@ import optparse
 import subprocess
 import re
 import glob
-import csv
+import unicodecsv as csv
 import simplejson
 import datetime
 import time
@@ -343,6 +343,8 @@ def check_prerequisities(options):
     jmeter = None
     try:
         jmeter = get_output(['which', 'jmeter'])
+        if len(jmeter) > 0:
+            jmeter = jmeter.rstrip()
     except subprocess.CalledProcessError:
         pass
     
@@ -395,15 +397,15 @@ def setup_jmeter(options):
           rm -fr jmeter
         fi
         
-        wget -nc http://mirrors.gigenet.com/apache/jmeter/binaries/apache-jmeter-2.9.tgz
-        tar -xzf apache-jmeter-2.9.tgz
-        mv apache-jmeter-2.9 jmeter
+        wget -nc http://mirror.23media.de/apache//jmeter/binaries/apache-jmeter-3.0.tgz
+        tar -xzf apache-jmeter-3.0.tgz
+        mv apache-jmeter-2.0 jmeter
         
-        wget -nc http://jmeter-plugins.org/downloads/file/JMeterPlugins-Standard-1.1.1.zip
-        wget -nc http://jmeter-plugins.org/downloads/file/JMeterPlugins-Extras-1.1.1.zip
+        wget -nc http://jmeter-plugins.org/downloads/file/JMeterPlugins-Standard-1.4.0.zip
+        wget -nc http://jmeter-plugins.org/downloads/file/JMeterPlugins-Extras-1.4.0.zip
         
-        unzip -o JMeterPlugins-Standard-1.1.1.zip -d jmeter
-        unzip -o JMeterPlugins-Extras-1.1.1.zip -d jmeter
+        unzip -o JMeterPlugins-Standard-1.4.0.zip -d jmeter
+        unzip -o JMeterPlugins-Extras-1.4.0.zip -d jmeter
         
         echo "%(release)s" > jmeter/RELEASE
         
@@ -723,7 +725,7 @@ def harvest_results(test_name, results):
     results.add_datapoint(test_name, 'median', aggregate.get_col_byname('aggregate_report_median')[0])
     results.add_datapoint(test_name, 'max', aggregate.get_col_byname('aggregate_report_max')[0])
     results.add_datapoint(test_name, 'min', aggregate.get_col_byname('aggregate_report_min')[0])
-    results.add_datapoint(test_name, '%error', '%0.3f' % float(aggregate.get_col_byname('aggregate_report_error%')[0]))
+    results.add_datapoint(test_name, '%error', '%s' % str(aggregate.get_col_byname('aggregate_report_error%')[0]))
     
     results.add_datapoint(test_name, '%90', percentiles.get_row_byvalue("Percentiles", "90.0")[1])
     results.add_datapoint(test_name, '%95', percentiles.get_row_byvalue("Percentiles", "95.0")[1])
